@@ -6,23 +6,23 @@ import './App.css';
 function Cat(props) {
 const [hidden,setHidden] = useState(false);
 const [x,setX] = useState(props.x);
-const [y, setY] = useState(props.y)
+const [y, setY] = useState(props.waveY*props.x)
 
 useEffect(() => {
   let currentX = props.x;
-  let currentY = props.y;
+  let currentY = props.waveY*currentX;
     const intervalId = setInterval(() => {
-      currentY += props.direction*props.speedY
-      currentX += props.speedX;  
-      if((currentX+props.speedX >=460 && currentX<= 600 && currentY+props.speedY> 300 && currentY<560) ){
+     currentX += props.speedX;
+     currentY = 0.5*props.waveY*currentX; 
+      if((currentX+props.speedX >=460 && currentX<= 500 && currentY> 320 && currentY<700) ){
         clearInterval(intervalId);
-        props.reportData({index: props.index,x:props.x,y:props.y, winner:true})
+        props.reportData({...props,winner:true})
         return;
       }
      
       if(currentX > 800 || currentY >800 || currentY <5 ){
         clearInterval(intervalId);
-        props.reportData({index: props.index,x:props.x,y:props.y, winner:false})
+        props.reportData({...props, winner:false})
         setHidden(true);
         return;
       }
@@ -36,7 +36,7 @@ useEffect(() => {
   return (
     <div>
       <div style={{position: 'absolute', left:`${x}px`,top:`${y}px`}}>
-       <img style={{height:"30px", width:"30px", opacity:hidden?"0":"1"}} src={birdImage} alt="cat"/> x:{Math.floor(x)}, y:{Math.floor(y)}} 
+       <img style={{height:"30px", width:"30px", opacity:hidden?"0":"1"}} src={birdImage} alt="cat"/>
     </div>
     </div>
   );
