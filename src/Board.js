@@ -16,13 +16,15 @@ function Board() {
   const [targetSurvialRate, setTargetSurvialRate] = useState(1);
   const [targetCrossRateValue, setTargetCrossRateValue] = useState(60)
   const [targetCrossRate, setTargetCrossRate] = useState(60);
-  const [targetMultationRateValue, setTargetMultationRateValue] = useState(1)
-  const [targetMultationRate, setTargetMultationRate] = useState(1);
+  const [targetMultationRateValue, setTargetMultationRateValue] = useState(0)
+  const [targetMultationRate, setTargetMultationRate] = useState(0);
   const [nextGen, setNextGen] = useState(false)
   const [parents, setParents] = useState([]);
   const [generationCounts, setGenerationCounts] = useState(0);
   const [flag,setFlag] = useState("none");
-  const [isStartDisabled, setIsStartDisabled] = useState(true)
+  const [isStartDisabled, setIsStartDisabled] = useState(true);
+
+  const MAXGEN = 50;
 
   const handleData = (e)=>{
      setResults((pre)=>[...pre, e])
@@ -51,7 +53,7 @@ function Board() {
   }
  const confirmPopulationNum = ()=>{
    populationNumValue>0 && setPopulationNum(populationNumValue)
-   setTargetSurvialRate(targetSurvialRateValue*0.01);
+   setTargetSurvialRate((targetSurvialRateValue*0.01).toFixed(2));
    setTargetCrossRate(targetCrossRateValue*0.01);
    setTargetMultationRate(targetMultationRateValue*0.01);
    setIsStartDisabled(false)
@@ -78,7 +80,7 @@ function Board() {
     setAnimals(temp);
   }
   useEffect(()=>{ 
-    if(populationNum>=80 && survivalRate<targetSurvialRate && results.length === populationNum ){
+    if(populationNum>=80 && survivalRate<targetSurvialRate && generationCounts <MAXGEN && results.length === populationNum ){
     setTimeout(()=>{
       setResults([]);
       setWinners([]);
@@ -87,7 +89,7 @@ function Board() {
       setNextGen(true)
     }, 10)
     }
-  }, [survivalRate, results, populationNum, targetSurvialRate])
+  }, [survivalRate, results, populationNum, targetSurvialRate, generationCounts])
 
   useEffect(()=>{
     
@@ -193,7 +195,7 @@ function Board() {
           <input 
             type="range"
             min="50"
-            max="100"
+            max="95"
             value={targetSurvialRateValue}
             onChange={(e)=>handleTargetSurvialRateValueChange(e)} /> {targetSurvialRateValue}%  
         </div>
@@ -201,8 +203,8 @@ function Board() {
           cross rate
           <input 
             type="range"
-            min="10"
-            max="90"
+            min="50"
+            max="80"
             value={targetCrossRateValue}
             onChange={(e)=>handleTargetCrossRateValueChange(e)} /> {targetCrossRateValue}%  
         </div>
@@ -210,8 +212,8 @@ function Board() {
           multation rate
           <input 
             type="range"
-            min="1"
-            max="10"
+            min="0"
+            max="5"
             value={targetMultationRateValue}
             onChange={(e)=>handleTargetMultationRateValueChange(e)} /> {targetMultationRateValue}%  
         </div>
@@ -234,6 +236,9 @@ function Board() {
           </div>
           <div>
           Gurrent survival rate : {survivalRate} {nextGen} 
+          </div>
+          <div>
+            {generationCounts >= MAXGEN && "The program is terminated, because it exceeded the max generation counts"}
           </div>
       </div>
      </div>
