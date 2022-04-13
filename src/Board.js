@@ -1,6 +1,8 @@
 import { useEffect, useState , useRef } from 'react';
 import './App.css';
 import Animal from './Animal';
+import skyImage from './sky.png';
+import landImage from './land.png';
 
 function Board() {
   const [results, setResults] = useState([]);
@@ -9,9 +11,13 @@ function Board() {
   const [animals, setAnimals] = useState([]);
   const [populationNumValue, setPopulationNumValue] = useState(0);
   const [populationNum, setPopulationNum] = useState(0)
-  const [survivalRate, setSurvivalRate] = useState(0)
-  const [targetSurvialRateValue, setTargetSurvialRateValue] = useState(1)
+  const [survivalRate, setSurvivalRate] = useState(50)
+  const [targetSurvialRateValue, setTargetSurvialRateValue] = useState(60)
   const [targetSurvialRate, setTargetSurvialRate] = useState(1);
+  const [targetCrossRateValue, setTargetCrossRateValue] = useState(60)
+  const [targetCrossRate, setTargetCrossRate] = useState(60);
+  const [targetMultationRateValue, setTargetMultationRateValue] = useState(1)
+  const [targetMultationRate, setTargetMultationRate] = useState(1);
   const [nextGen, setNextGen] = useState(false)
   const [parents, setParents] = useState([]);
   const [generationCounts, setGenerationCounts] = useState(0);
@@ -33,12 +39,20 @@ function Board() {
   const handleTargetSurvialRateValueChange = (e)=>{
     setTargetSurvialRateValue(e.target.value);
   }
+  const handleTargetCrossRateValueChange = (e)=>{
+    setTargetCrossRateValue(e.target.value);
+  }
+  const handleTargetMultationRateValueChange = (e)=>{
+    setTargetMultationRateValue(e.target.value);
+  }
   const handlePopulationNumValueChange = (e)=>{
     setPopulationNumValue(Number(e.target.value))
   }
  const confirmPopulationNum = ()=>{
    populationNumValue>0 && setPopulationNum(populationNumValue)
    setTargetSurvialRate(targetSurvialRateValue*0.01);
+   setTargetCrossRate(targetCrossRateValue*0.01);
+   setTargetMultationRate(targetMultationRateValue*0.01);
    setResults([]);
    setWinners([]);
    setAnimals([]);
@@ -92,7 +106,7 @@ function Board() {
     let startXs = [];
     let speedXs =[];
     let waveYs = [];
-    let crossRate = 0.7;
+   
     if(parentsCopy.length>0){
         parentsCopy.forEach((e)=>{
           !startXsFail.includes(e.x)&& startXs.push(e.x);
@@ -100,8 +114,8 @@ function Board() {
           !waveYsFail.includes(e.waveY) && waveYs.push(e.waveY)
       })
     }
-    setFlag(JSON.stringify(waveYs))
-    let crossCount = populationNum*crossRate;
+    let crossRate = targetCrossRate;
+    let crossCount = Math.floor(populationNum*crossRate);
     let temp = [];
     for (let i=0; i<crossCount; i++){
       let startXindex =  getRandomArbitrary(0, startXs.length);
@@ -110,28 +124,31 @@ function Board() {
       let obj = {};
       obj.x = startXs[startXindex];
       obj.speedX = speedXs[speedXIndex];
-      obj.waveY = waveYs[waveYIndex];
-     
+      obj.waveY = waveYs[waveYIndex]; 
       temp.push(obj);
     }
-    let cloneRate = 0.3
-    let cloneCount = populationNum*cloneRate;
+    let multationNum = Math.floor(targetMultationRate * populationNum)
+    for(let i=0; i<multationNum;i++){
+      let creature = {};
+      creature.x = getRandomArbitrary(1,20);
+      creature.speedX = getRandomArbitrary(10,30);
+      creature.waveY = getRandomArbitrary(1,50);
+       
+      temp.push(creature)
+      
+  }
+   
+    let cloneCount = populationNum - crossCount - multationNum;
     let cloneNums = cloneCount;
     while(cloneNums > 0){
       let parentIndex = getRandomArbitrary(0,parentsCopy.length);
       temp.push(parentsCopy[parentIndex]);
       cloneNums--;
     }
-    let leftCounts = populationNum - crossCount - cloneCount;
-      setGenerationCounts(pre=>pre+1)
-      for(let i=0; i<leftCounts;i++){
-        let creature = {};
-        creature.x = getRandomArbitrary(10,20);
-        creature.speedX = getRandomArbitrary(10,30);
-        creature.waveY = getRandomArbitrary(1,8);
-        temp.push(creature)
-    }
+   //setFlag(`temp ${temp.length} cross count ${crossCount} multationNum ${multationNum} clonecount ${cloneCount} 
+   //total ${crossCount + multationNum+cloneCount}`)
    
+    setGenerationCounts(pre=>pre+1)
     setTimeout(()=>{
       setAnimals(temp); 
       setParents([])
@@ -139,7 +156,7 @@ function Board() {
     },1000) 
     }
  //   setFlag(animals.length)
-  },[nextGen, populationNum, animals, parents, failers])
+  },[nextGen, populationNum, animals, parents, failers, targetCrossRate, targetMultationRate])
 
   useEffect(()=>{
      setSurvivalRate(winners.length/populationNum);
@@ -147,9 +164,9 @@ function Board() {
 
 
   return (
-    <div style={{display : "flex"}}>
-      <div style={{height:"700px", width:"800px", border:"1px solid red", marginLeft:"30px", marginTop:"50px",background:"beige"}}>
-        <div style={{border:"1px solid green", height:"350px", width:"100px", marginLeft:"400px", marginTop:"300px",background:"#DCF9AD" }}></div>
+    <div style={{display : "flex" , border: "1px solid white", margin: "50px", height:"900px"}}>
+      <div style={{height:"700px", width:"800px", marginLeft:"30px", marginTop:"30px",background:"white"}}>
+        <div style={{height:"270px", width:"110px", marginLeft:"340px", marginTop:"370px",background:"#DCF9AD" }}></div>
         {animals.map((animal, index)=>  <Animal key ={index}
                                                 index= {index} 
                                                 x={animal.x}  
@@ -157,42 +174,62 @@ function Board() {
                                                 waveY ={animal.waveY} 
                                                 reportData ={handleData}/> )}
       </div>
-      <div style={{width:"500px", border:"1px solid blue", marginTop:"50px"}}>
-        <div>
-          <p>{flag}</p>
+      <div style={{width:"500px", marginTop:"50px", padding:"10px"}}>
+        <div className="mb-3">
+          
           population number
           <input 
-            type="number"
+            type="range"
             min="80"
             max="150"
             value={populationNumValue}
-            onChange={(e)=>handlePopulationNumValueChange(e)} />
+            onChange={(e)=>handlePopulationNumValueChange(e)} /> {populationNumValue}
         </div>
-        <div>
+        <div className="mb-3">
           survival rate
           <input 
-            type="number"
+            type="range"
             min="50"
             max="100"
             value={targetSurvialRateValue}
-            onChange={(e)=>handleTargetSurvialRateValueChange(e)} /> %
+            onChange={(e)=>handleTargetSurvialRateValueChange(e)} /> {targetSurvialRateValue}%  
+        </div>
+        <div className="mb-3">
+          cross rate
+          <input 
+            type="range"
+            min="10"
+            max="90"
+            value={targetCrossRateValue}
+            onChange={(e)=>handleTargetCrossRateValueChange(e)} /> {targetCrossRateValue}%  
+        </div>
+        <div className="mb-3">
+          multation rate
+          <input 
+            type="range"
+            min="1"
+            max="10"
+            value={targetMultationRateValue}
+            onChange={(e)=>handleTargetMultationRateValueChange(e)} /> {targetMultationRateValue}%  
         </div>
           <button 
-              className= "btn btn-outline-primary m-1"
+              className= "btn btn-outline-light mb-3"
               onClick={confirmPopulationNum}>confirm</button>
         <div>
           <button 
-              className="btn btn-outline-success mt-5"
+              className="btn btn-outline-light mb-3"
               onClick={initializePopulation}> 
               initialize population </button>
         </div> 
           {/* winners: {winners.map((winner,index)=><p key={index}>{winner.index} </p>)} */}
           <div>
-            generation counts {generationCounts} Target {targetSurvialRate}
+            Generation counts: {generationCounts}
           </div>
           <div>
-            survival rate : {survivalRate} {nextGen} 
-            <p>results {results.length} population {populationNum} animals {animals.length}</p>
+          Target survival rate: {targetSurvialRate}
+          </div>
+          <div>
+          Gurrent survival rate : {survivalRate} {nextGen} 
           </div>
       </div>
      </div>
