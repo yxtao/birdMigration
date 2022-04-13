@@ -9,7 +9,7 @@ function Board() {
   const [winners, setWinners] = useState([]);
   const [failers, setFailers] = useState([]);
   const [animals, setAnimals] = useState([]);
-  const [populationNumValue, setPopulationNumValue] = useState(0);
+  const [populationNumValue, setPopulationNumValue] = useState(80);
   const [populationNum, setPopulationNum] = useState(0)
   const [survivalRate, setSurvivalRate] = useState(50)
   const [targetSurvialRateValue, setTargetSurvialRateValue] = useState(60)
@@ -21,7 +21,8 @@ function Board() {
   const [nextGen, setNextGen] = useState(false)
   const [parents, setParents] = useState([]);
   const [generationCounts, setGenerationCounts] = useState(0);
-  const [flag,setFlag] = useState("none")
+  const [flag,setFlag] = useState("none");
+  const [isStartDisabled, setIsStartDisabled] = useState(true)
 
   const handleData = (e)=>{
      setResults((pre)=>[...pre, e])
@@ -53,11 +54,13 @@ function Board() {
    setTargetSurvialRate(targetSurvialRateValue*0.01);
    setTargetCrossRate(targetCrossRateValue*0.01);
    setTargetMultationRate(targetMultationRateValue*0.01);
+   setIsStartDisabled(false)
    setResults([]);
    setWinners([]);
    setAnimals([]);
  }
   const initializePopulation = ()=>{ 
+    setIsStartDisabled(true)
     setGenerationCounts(1)
     setResults([]);
     setWinners([]);
@@ -75,14 +78,14 @@ function Board() {
     setAnimals(temp);
   }
   useEffect(()=>{ 
-    if(populationNum>=30 && survivalRate<targetSurvialRate && results.length === populationNum ){
+    if(populationNum>=80 && survivalRate<targetSurvialRate && results.length === populationNum ){
     setTimeout(()=>{
       setResults([]);
       setWinners([]);
       setFailers([]);
       setAnimals([]);
       setNextGen(true)
-    }, 500)
+    }, 10)
     }
   }, [survivalRate, results, populationNum, targetSurvialRate])
 
@@ -153,7 +156,7 @@ function Board() {
       setAnimals(temp); 
       setParents([])
       setNextGen(false)
-    },1000) 
+    },10) 
     }
  //   setFlag(animals.length)
   },[nextGen, populationNum, animals, parents, failers, targetCrossRate, targetMultationRate])
@@ -218,8 +221,9 @@ function Board() {
         <div>
           <button 
               className="btn btn-outline-light mb-3"
-              onClick={initializePopulation}> 
-              initialize population </button>
+              onClick={initializePopulation}
+              disabled={isStartDisabled}> 
+              start </button>
         </div> 
           {/* winners: {winners.map((winner,index)=><p key={index}>{winner.index} </p>)} */}
           <div>
