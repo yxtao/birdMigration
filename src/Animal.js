@@ -10,17 +10,17 @@ const [y, setY] = useState(props.waveY*props.x)
 
 useEffect(() => {
   let currentX = props.x;
-  let currentY = props.waveY*currentX;
+  let currentY = props.waveY;
     const intervalId = setInterval(() => {
      currentX += props.speedX;
-     currentY = 0.5*props.waveY*currentX; 
+     currentY += props.waveY 
       if((currentX+props.speedX >=460 && currentX<= 500 && currentY> 320 && currentY<700) ){
         clearInterval(intervalId);
         props.reportData({...props,winner:true})
         return;
       }
      
-      if(currentX > 800 || currentY >800 || currentY <5 ){
+      if(currentX > 520 || currentY >700 || currentY <5 ){
         clearInterval(intervalId);
         props.reportData({...props, winner:false})
         setHidden(true);
@@ -36,7 +36,7 @@ useEffect(() => {
   return (
     <div>
       <div style={{position: 'absolute', left:`${x}px`,top:`${y}px`}}>
-       <img style={{height:"30px", width:"30px", opacity:hidden?"0":"1"}} src={birdImage} alt="cat"/>
+       <img style={{height:"30px", width:"30px", opacity:hidden?"0":"1"}} src={birdImage} alt="bird"/>
     </div>
     </div>
   );
