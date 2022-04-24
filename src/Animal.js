@@ -15,19 +15,19 @@ useEffect(() => {
     const intervalId = setInterval(() => {
      currentX += props.speedX;
      currentY += props.waveY 
+     setX(currentX);
+     setY(currentY);
       if((currentX + props.speedX >= 460 && currentX <= 500 && currentY> 540 && currentY <= 780) ){
         clearInterval(intervalId);
         props.reportData({...props,winner:true, endX: currentX, endY:currentY})
         return;
-      } 
-      if(currentX > 500 || currentY > 780 ){
+      } else if(currentX > 500 || currentY > 700 ){
         clearInterval(intervalId);
         props.reportData({...props, winner:false, endX: currentX, endY:currentY})
         setHidden(true);
         return;
       }
-      setX(currentX);
-      setY(currentY);
+      
     }, 100);
     
     return () => clearInterval(intervalId);
@@ -37,7 +37,7 @@ useEffect(() => {
     const intervalId = setInterval(() => {
      currentX -= props.speedX;
      currentY -= props.waveY; 
-      if((currentX < 10 || currentY < 20) ){
+      if((currentX < 5  || currentY < 5) ){
         clearInterval(intervalId);
         props.reportNextGen(props);
         setHidden(true);
