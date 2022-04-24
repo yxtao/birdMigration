@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import birdImage from "./bird.png"
 
 function Animal(props) {
+const [x,setX] = useState(props.direction === 1 ? props.x: props.endX);
+const [y, setY] = useState(props.direction === 1? props.waveY: props.endY);
 const [hidden,setHidden] = useState(false);
 const direction = props.direction;
-const [x,setX] = useState(props.direction ===1 ? props.x: props.endX);
-const [y, setY] = useState(props.direction === 1? props.waveY: props.endY);
 
 useEffect(() => {
   setHidden(false);
@@ -15,12 +15,12 @@ useEffect(() => {
     const intervalId = setInterval(() => {
      currentX += props.speedX;
      currentY += props.waveY 
-      if((currentX+props.speedX >=460 && currentX<= 500 && currentY> 540 && currentY<=780) ){
+      if((currentX + props.speedX >= 460 && currentX <= 500 && currentY> 540 && currentY <= 780) ){
         clearInterval(intervalId);
         props.reportData({...props,winner:true, endX: currentX, endY:currentY})
         return;
       } 
-      if(currentX > 500 || currentY >780 ){
+      if(currentX > 500 || currentY > 780 ){
         clearInterval(intervalId);
         props.reportData({...props, winner:false, endX: currentX, endY:currentY})
         setHidden(true);
@@ -37,7 +37,7 @@ useEffect(() => {
     const intervalId = setInterval(() => {
      currentX -= props.speedX;
      currentY -= props.waveY; 
-      if((currentX <10 || currentY<20) ){
+      if((currentX < 10 || currentY < 20) ){
         clearInterval(intervalId);
         props.reportNextGen(props);
         setHidden(true);

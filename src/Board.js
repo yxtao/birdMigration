@@ -27,35 +27,24 @@ function Board() {
   const [direction, setDirection] = useState(1);
   const [survivals,setSurvivals] = useState([]);
   
-  const handleData = (e)=>{
-     setResults((pre)=>[...pre, e])
-     if(e.winner === true){
-       setWinners((pre)=>[...pre, e]);
-       setParents((pre)=>[...pre, e]);
-     }else{
-       setFailers((pre)=>[...pre,e])
-     }
-  }
- const handleReportNextGen =(e)=>{
-    setBackAnimals((pre)=> [...pre,e]);
- }
  function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
-  const handleTargetSurvialRateValueChange = (e)=>{
+  const handleTargetSurvialRateValueChange = (e) => {
     setTargetSurvialRateValue(e.target.value);
   }
-  const handleTargetCrossRateValueChange = (e)=>{
+  const handleTargetCrossRateValueChange = (e) => {
     setTargetCrossRateValue(e.target.value);
   }
-  const handleTargetMutationRateValueChange = (e)=>{
+  const handleTargetMutationRateValueChange = (e) => {
     setTargetMutationRateValue(e.target.value);
   }
-  const handlePopulationNumValueChange = (e)=>{
+  const handlePopulationNumValueChange = (e) => {
     setPopulationNumValue(Number(e.target.value))
   }
- const confirmPopulationNum = ()=>{
-   populationNumValue>0 && setPopulationNum(populationNumValue)
+
+ const confirmPopulationNum = () => {
+   populationNumValue > 0 && setPopulationNum(populationNumValue)
    setTargetSurvialRate((targetSurvialRateValue*0.01).toFixed(2));
    setTargetCrossRate(targetCrossRateValue*0.01);
    setTargetMutationRate(targetMutationRateValue*0.01);
@@ -64,7 +53,8 @@ function Board() {
    setWinners([]);
    setAnimals([]);
  }
-  const initializePopulation = ()=>{ 
+
+  const initializePopulation = () => { 
     setIsStartDisabled(true)
     setGenerationCounts(1)
     setResults([]);
@@ -73,7 +63,7 @@ function Board() {
     setAnimals([]);
     setParents([]);
     let temp = [];
-    for(let i=0; i<populationNum;i++){
+    for(let i = 0; i < populationNum;i++){
         let creature = {};
         creature.direction = 1;
         creature.x = getRandomArbitrary(5,20);
@@ -83,14 +73,29 @@ function Board() {
     }
     setAnimals(temp);
   }
-  useEffect(()=>{ 
-    if(populationNum>= MIN_POPULATION
-      && survivalRate<targetSurvialRate 
-      && generationCounts <MAXGEN 
+
+  const handleData = (e) => {
+    setResults((pre) => [...pre, e])
+    if(e.winner === true){
+      setWinners((pre) => [...pre, e]);
+      setParents((pre) => [...pre, e]);
+    }else{
+      setFailers((pre) => [...pre,e])
+    }
+ }
+  
+  useEffect(() => {
+    setSurvivalRate(winners.length/populationNum);
+  },[results, populationNum, winners])
+
+  useEffect(() => { 
+    if(populationNum >= MIN_POPULATION
+      && survivalRate < targetSurvialRate 
+      && generationCounts < MAXGEN 
       && results.length === populationNum ){
-    setTimeout(()=>{  
+    setTimeout(() => {  
       let temp = [];
-      winners.forEach((obj)=>{
+      winners.forEach((obj) => {
          temp.push(obj);
       })
       setSurvivals(temp);
@@ -98,40 +103,59 @@ function Board() {
       setResults([]);
     }, 1000)
     }
-  }, [survivalRate, results, populationNum, targetSurvialRate, generationCounts, winners, direction])
+  }, [survivalRate, 
+      results, 
+      populationNum, 
+      targetSurvialRate, 
+      generationCounts, 
+      winners, 
+      direction])
 
-  useEffect(()=>{
-    let temp=[];
-     if(direction=== -1){ 
-       survivals.forEach((obj)=>{
+  useEffect(() => {
+    let temp = [];
+     if(direction === -1){ 
+       survivals.forEach((obj) => {
          temp.push(obj)
        })    
       setAnimals(temp);
      }
   }, [direction, survivals])
 
-  useEffect(()=>{
-    if(backAnimals.length === survivals.length && direction === -1 && survivalRate<targetSurvialRate  && generationCounts< MAXGEN ){
+  const handleReportNextGen = (e) => {
+    setBackAnimals((pre) => [...pre,e]);
+ }
+
+  useEffect(() => {
+    if(backAnimals.length === survivals.length 
+      && direction === -1
+      && survivalRate < targetSurvialRate  
+      && generationCounts< MAXGEN ){
       setNextGen(true);
-      setGenerationCounts(pre=>pre+1)
+      setGenerationCounts(pre => pre+1)
       let temp = [];
-      backAnimals.forEach((obj)=>{
+      backAnimals.forEach((obj) => {
         temp.push(obj);
       })
       setParents(temp);
       setDirection(1);
      }
- },[backAnimals, animals, direction, survivals.length, survivalRate, targetSurvialRate, generationCounts])
+ },[backAnimals, 
+    animals, 
+    direction, 
+    survivals.length, 
+    survivalRate, 
+    targetSurvialRate, 
+    generationCounts])
 
   useEffect(()=>{  
     if(nextGen === true && direction === 1 ){
     let parentsCopy = [...parents];
     let failersCopy = [...failers];
     let startXsFail = [];
-    let speedXsFail =[];
+    let speedXsFail = [];
     let waveYsFail = [];
-    if(failersCopy.length>0){
-      failersCopy.forEach((e)=>{
+    if(failersCopy.length > 0){
+      failersCopy.forEach((e) => {
         startXsFail.push(e.x);
         speedXsFail.push(e.speedX);
         waveYsFail.push(e.waveY)
@@ -140,9 +164,9 @@ function Board() {
     let startXs = [];
     let speedXs =[];
     let waveYs = []; 
-    if(parentsCopy.length>0){
-        parentsCopy.forEach((e)=>{
-          !startXsFail.includes(e.x)&& startXs.push(e.x);
+    if(parentsCopy.length > 0){
+        parentsCopy.forEach((e) => {
+          !startXsFail.includes(e.x) && startXs.push(e.x);
           !speedXsFail.includes(e.speedX) && speedXs.push(e.speedX);
           !waveYsFail.includes(e.waveY) && waveYs.push(e.waveY)
       })
@@ -151,7 +175,7 @@ function Board() {
     let crossRate = targetCrossRate;
     let crossCount = Math.floor(populationNum*crossRate);
     let temp = [];
-    for (let i=0; i<crossCount; i++){
+    for (let i = 0; i<crossCount; i++){
       let startXindex =  getRandomArbitrary(0, startXs.length);
       let speedXIndex = getRandomArbitrary(0, speedXs.length);
       let waveYIndex = getRandomArbitrary(0, waveYs.length);
@@ -163,7 +187,7 @@ function Board() {
     }
 
     let mutationNum = Math.floor(targetMutationRate * populationNum)
-    for (let i=0; i<mutationNum; i++){
+    for (let i = 0; i < mutationNum; i++){
       let startXindex =  getRandomArbitrary(0, startXs.length);
       let speedXIndex = getRandomArbitrary(0, speedXs.length);
       let waveYIndex = getRandomArbitrary(0, waveYs.length);
@@ -190,7 +214,7 @@ function Board() {
       cloneNums--;
     }
 
-    setTimeout(()=>{
+    setTimeout(() => {
       setAnimals(temp); 
       setWinners([]);
       setFailers([]);
@@ -200,11 +224,14 @@ function Board() {
       setNextGen(false)
     },100) 
   }
-  },[nextGen, populationNum, animals, parents, failers, targetCrossRate, targetMutationRate, direction])
-
-  useEffect(()=>{
-     setSurvivalRate(winners.length/populationNum);
-  },[results, populationNum, winners])
+  },[nextGen,
+    populationNum, 
+    animals, 
+    parents, 
+    failers, 
+    targetCrossRate, 
+    targetMutationRate, 
+    direction])
 
   return (
     <div style={{display : "flex" , border: "1px solid white", margin: "50px", height:"900px"}}>
