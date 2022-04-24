@@ -1,0 +1,18 @@
+
+.info_div{
+    width:500px;
+    margin-top:50px;
+    padding:10px; 
+    overflow-y:scroll; 
+}  
+
+ ::-webkit-scrollbar {
+    height: 1px;
+    width: 3px;
+    background: rgb(247, 243, 243);
+ }  
+::-webkit-scrollbar-thumb {
+    background: #fafaf8;
+    -webkit-border-radius: 1ex;
+    -webkit-box-shadow: 0px 0px 0px rgba(238, 12, 12, 0.75);
+}

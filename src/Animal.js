@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import catImage from './cat.png';
 import birdImage from "./bird.png"
-import './App.css';
 
 function Animal(props) {
 const [hidden,setHidden] = useState(false);
@@ -12,7 +10,6 @@ const [y, setY] = useState(props.direction === 1? props.waveY: props.endY);
 useEffect(() => {
   setHidden(false);
   if(direction === 1){
-   // console.log(props.x)
     let currentX = props.x;
     let currentY = props.waveY;
     const intervalId = setInterval(() => {
@@ -36,13 +33,12 @@ useEffect(() => {
     
     return () => clearInterval(intervalId);
   }else{
-    console.log(direction,props.endY)
     let currentX = props.endX;
     let currentY = props.endY;
     const intervalId = setInterval(() => {
      currentX -= props.speedX;
      currentY -= props.waveY; 
-      if((currentX <50 || currentY<50) ){
+      if((currentX <10 || currentY<20) ){
         clearInterval(intervalId);
         props.reportNextGen(props);
         setHidden(true);

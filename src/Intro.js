@@ -62,7 +62,7 @@ const Intro = () =>{
                                 </li>
                                 <li>
                                 <div className="text-primary">  3.3. Perform mutation to increase the variety of the population </div>
-                                Change certain values in the offspring. Each offerspring inherits traits from the parents,
+                                Change certain values in the offspring. Each offspring inherits traits from the parents,
                                 which are starting position, flying direction and speed. Randomly pick one of the traits and replace it with an arbitrary value.
                                 </li>
                                 <li>
