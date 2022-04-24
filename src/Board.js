@@ -1,8 +1,6 @@
 import { useEffect, useState , useRef } from 'react';
 import './App.css';
 import Animal from './Animal';
-import skyImage from './sky.png';
-import landImage from './land.png';
 
 function Board() {
   const [results, setResults] = useState([]);
@@ -23,9 +21,11 @@ function Board() {
   const [generationCounts, setGenerationCounts] = useState(0);
   const [flag,setFlag] = useState("none");
   const [isStartDisabled, setIsStartDisabled] = useState(true);
+  const [backAnimals, setBackAnimals] = useState([]);
+  const [direction, setDirection] = useState(1);
+  const [survivals,setSurvivals] = useState([]);
 
   const MAXGEN = 50;
-
   const handleData = (e)=>{
      setResults((pre)=>[...pre, e])
      if(e.winner === true){
@@ -35,7 +35,9 @@ function Board() {
        setFailers((pre)=>[...pre,e])
      }
   }
- 
+ const handleReportNextGen =(e)=>{
+    setBackAnimals((pre)=> [...pre,e]);
+ }
  function getRandomArbitrary(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
   }
@@ -72,6 +74,7 @@ function Board() {
     let temp = [];
     for(let i=0; i<populationNum;i++){
         let creature = {};
+        creature.direction = 1;
         creature.x = getRandomArbitrary(1,20);
         creature.speedX = getRandomArbitrary(10,30);
         creature.waveY = getRandomArbitrary(1,50);
@@ -80,22 +83,43 @@ function Board() {
     setAnimals(temp);
   }
   useEffect(()=>{ 
-    if(populationNum>=80 && survivalRate<targetSurvialRate && generationCounts <MAXGEN && results.length === populationNum ){
-    setTimeout(()=>{
+    if(populationNum>=80 
+      && survivalRate<targetSurvialRate 
+      && generationCounts <MAXGEN 
+      && results.length === populationNum ){
+    setTimeout(()=>{  
+      let temp = [];
+      winners.forEach((obj)=>{
+         temp.push(obj);
+      })
+      setSurvivals(temp);
+      setDirection(-1);
       setResults([]);
-      setWinners([]);
-      setFailers([]);
-      setAnimals([]);
-      setNextGen(true)
-    }, 10)
+    }, 1000)
     }
-  }, [survivalRate, results, populationNum, targetSurvialRate, generationCounts])
+  }, [survivalRate, results, populationNum, targetSurvialRate, generationCounts, winners, direction])
+
+  useEffect(()=>{
+     if(direction=== -1){ 
+       survivals.forEach((obj)=>{
+         obj.direction = -1;
+       })
+      setAnimals(survivals);
+     }
+  }, [direction, survivals])
+
+  useEffect(()=>{
+    if(backAnimals.length === survivals.length && direction === -1 && survivalRate<targetSurvialRate   ){
+      setNextGen(true);
+      setParents(backAnimals);
+      setDirection(1);
+      setFlag("direction line 128 "+ backAnimals.length);
+     }
+ },[backAnimals, animals, direction, survivals.length, survivalRate, targetSurvialRate])
 
   useEffect(()=>{
     
-    //setFlag(`cross count ${crossCount} clone count ${cloneCount} left count ${leftCounts} total=${leftCounts+crossCount+cloneCount}`)
-    if(nextGen === true && animals.length===0){
-
+    if(nextGen === true && direction === 1 ){
     let parentsCopy = [...parents];
     let failersCopy = [...failers];
     let startXsFail = [];
@@ -132,56 +156,71 @@ function Board() {
       obj.waveY = waveYs[waveYIndex]; 
       temp.push(obj);
     }
-    let multationNum = Math.floor(targetMultationRate * populationNum)
-    for(let i=0; i<multationNum;i++){
-      let creature = {};
-      creature.x = getRandomArbitrary(1,20);
-      creature.speedX = getRandomArbitrary(10,30);
-      creature.waveY = getRandomArbitrary(1,50);
-       
-      temp.push(creature)
-      
-  }
+    let mutationNum = Math.floor(targetMultationRate * populationNum)
+    for (let i=0; i<mutationNum; i++){
+      let startXindex =  getRandomArbitrary(0, startXs.length);
+      let speedXIndex = getRandomArbitrary(0, speedXs.length);
+      let waveYIndex = getRandomArbitrary(0, waveYs.length);
+      let obj = {};
+      obj.x = startXs[startXindex];
+      obj.speedX = speedXs[speedXIndex];
+      obj.waveY = waveYs[waveYIndex]; 
+      let mutation_index = getRandomArbitrary(0,3);
+      if(mutation_index === 0){
+        obj.x = getRandomArbitrary(1,20);
+      }else if(mutation_index === 1){
+        obj.speedX = getRandomArbitrary(10,30);
+      }else{
+        obj.waveY = getRandomArbitrary(1,50);
+      }
+      temp.push(obj);
+    }
    
-    let cloneCount = populationNum - crossCount - multationNum;
+    let cloneCount = populationNum - crossCount - mutationNum;
     let cloneNums = cloneCount;
     while(cloneNums > 0){
       let parentIndex = getRandomArbitrary(0,parentsCopy.length);
       temp.push(parentsCopy[parentIndex]);
       cloneNums--;
     }
-   //setFlag(`temp ${temp.length} cross count ${crossCount} multationNum ${multationNum} clonecount ${cloneCount} 
-   //total ${crossCount + multationNum+cloneCount}`)
-   
+
     setGenerationCounts(pre=>pre+1)
     setTimeout(()=>{
       setAnimals(temp); 
-      setParents([])
+      setWinners([]);
+      setFailers([]);
+      setResults([]);
+      setSurvivals([]);
+      setBackAnimals([]);
       setNextGen(false)
-    },10) 
+    },100) 
     }
  //   setFlag(animals.length)
-  },[nextGen, populationNum, animals, parents, failers, targetCrossRate, targetMultationRate])
+  },[nextGen, populationNum, animals, parents, failers, targetCrossRate, targetMultationRate, direction])
 
   useEffect(()=>{
      setSurvivalRate(winners.length/populationNum);
   },[results, populationNum, winners])
 
-
   return (
     <div style={{display : "flex" , border: "1px solid white", margin: "50px", height:"900px"}}>
       <div style={{height:"700px", width:"800px", marginLeft:"30px", marginTop:"30px",background:"white"}}>
-        <div style={{height:"270px", width:"110px", marginLeft:"340px", marginTop:"370px",background:"#DCF9AD" }}></div>
-        {animals.map((animal, index)=>  <Animal key ={index}
+        <div style={{height:"270px", width:"110px", marginLeft:"340px", marginTop:"370px",background:"#DCF9AD" }}>
+          <div className="text-danger p-3"> Destination Island </div>
+        </div>
+        { animals.length>0 && animals.map((animal, index)=> <Animal key ={index}
                                                 index= {index} 
                                                 x={animal.x}  
+                                                endX = {animal.endX? animal.endX : 400}
                                                 speedX={animal.speedX}  
                                                 waveY ={animal.waveY} 
-                                                reportData ={handleData}/> )}
+                                                endY = {animal.endY? animal.endY: 680}  
+                                                reportData ={handleData}
+                                                reportNextGen = {handleReportNextGen}
+                                                direction = {direction}/> )}
       </div>
-      <div style={{width:"500px", marginTop:"50px", padding:"10px"}}>
+      <div style={{width:"500px", marginTop:"50px", padding:"10px", overflow:"auto", }}>
         <div className="mb-3">
-          
           population number
           <input 
             type="range"
@@ -191,7 +230,7 @@ function Board() {
             onChange={(e)=>handlePopulationNumValueChange(e)} /> {populationNumValue}
         </div>
         <div className="mb-3">
-          survival rate
+          survival rate 
           <input 
             type="range"
             min="50"
@@ -209,7 +248,7 @@ function Board() {
             onChange={(e)=>handleTargetCrossRateValueChange(e)} /> {targetCrossRateValue}%  
         </div>
         <div className="mb-3">
-          multation rate
+          mutation rate
           <input 
             type="range"
             min="0"
@@ -235,10 +274,14 @@ function Board() {
           Target survival rate: {targetSurvialRate}
           </div>
           <div>
-          Gurrent survival rate : {survivalRate} {nextGen} 
+          Current survival rate : {survivalRate} {nextGen} 
           </div>
           <div>
             {generationCounts >= MAXGEN && "The program is terminated, because it exceeded the max generation counts"}
+            {survivalRate>=targetSurvialRate 
+            && <ul> The birds have reached the target survival rate, here are their gene data
+               {winners.map((animal, index)=><li key={index}> start X position:  {animal.x} ; wave Y direction: {animal.waveY} ; speed: {animal.speedX}</li> )}
+              </ul>}
           </div>
       </div>
      </div>

@@ -3,26 +3,30 @@ import catImage from './cat.png';
 import birdImage from "./bird.png"
 import './App.css';
 
-function Cat(props) {
+function Animal(props) {
 const [hidden,setHidden] = useState(false);
-const [x,setX] = useState(props.x);
-const [y, setY] = useState(props.waveY*props.x)
+const direction = props.direction;
+const [x,setX] = useState(props.direction ===1 ? props.x: props.endX);
+const [y, setY] = useState(props.direction === 1? props.waveY: props.endY);
 
 useEffect(() => {
-  let currentX = props.x;
-  let currentY = props.waveY;
+  setHidden(false);
+  if(direction === 1){
+   // console.log(props.x)
+    let currentX = props.x;
+    let currentY = props.waveY;
     const intervalId = setInterval(() => {
      currentX += props.speedX;
      currentY += props.waveY 
       if((currentX+props.speedX >=460 && currentX<= 500 && currentY> 540 && currentY<=780) ){
         clearInterval(intervalId);
-        props.reportData({...props,winner:true})
+        props.reportData({...props,winner:true, endX: currentX, endY:currentY})
         return;
       }
      
       if(currentX > 500 || currentY >780 ){
         clearInterval(intervalId);
-        props.reportData({...props, winner:false})
+        props.reportData({...props, winner:false, endX: currentX, endY:currentY})
         setHidden(true);
         return;
       }
@@ -31,15 +35,35 @@ useEffect(() => {
     }, 100);
     
     return () => clearInterval(intervalId);
-  }, []);
+  }else{
+    console.log(direction,props.endY)
+    let currentX = props.endX;
+    let currentY = props.endY;
+    const intervalId = setInterval(() => {
+     currentX -= props.speedX;
+     currentY -= props.waveY; 
+      if((currentX <50 || currentY<50) ){
+        clearInterval(intervalId);
+        props.reportNextGen(props);
+        setHidden(true);
+        return;
+      }
+      setX(currentX);
+      setY(currentY);
+    }, 100);
+    
+    return () => clearInterval(intervalId);
+  }
+  
+  }, [direction]);
 
   return (
     <div>
       <div style={{position: 'absolute', left:`${x}px`,top:`${y}px`}}>
-       <img style={{height:"30px", width:"30px", opacity:hidden?"0":"1"}} src={birdImage} alt="bird"/> 
+       <img style={{height:"15px", width:"15px", opacity:hidden?"0":"1"}} src={birdImage} alt="bird"/> 
     </div>
     </div>
   );
 }
 
-export default Cat;
+export default Animal;

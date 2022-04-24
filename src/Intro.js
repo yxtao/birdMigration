@@ -2,11 +2,11 @@
 const Intro = () =>{
     return (
         <div className="container bg-dark mt-5" style={{height:"800px", border: "1px solid white"}}>
-            <div className="h4 d-flex justify-content-center font-weight-bold mt-5">
+            <div className="h4 d-flex justify-content-center font-weight-bold mt-3">
                 Bird Migration Visualization 
             </div>
             <div className="h4 d-flex justify-content-center">
-                A web project to demonstrate the Evolutionary Algorithm in birds’ adaptation to migration 
+                 Evolutionary Algorithms in birds’ adaptation to migration 
             </div>
             <div className="h5 d-flex justify-content-left pt-3" style={{overflow:"auto", height:"600px"}}>
                 <ul>
@@ -53,16 +53,17 @@ const Intro = () =>{
                         <p>While stopping criterion is not satisfied, the following steps is processed : </p>
                             <ul>
                                 <li>
-                                3.1. Select parent birds, which are the data from the birds have high fitness score
+                                <div className="text-primary">3.1. Select parent birds </div>
+                                 Select the  data from the birds have high fitness score
                                 </li>
                                 <li>
-                                3.2. Perform the crossover to produce offsprings, 
-                                which means try different combinations of the variables’ values.
-                                This may be set to a certain crossover ratio by the player.
+                                <div className="text-primary"> 3.2. Perform the crossover to produce offsprings </div>
+                                Perform different combinations of the variables’ values.
                                 </li>
                                 <li>
-                                3.3. Perform mutation to increase the variety of the population,
-                                which means change certain values in the offspring. This may be set to a certain mutation ratio by the player.
+                                <div className="text-primary">  3.3. Perform mutation to increase the variety of the population </div>
+                                Change certain values in the offspring. Each offerspring inherits traits from the parents,
+                                which are starting position, flying direction and speed. Randomly pick one of the traits and replace it with an arbitrary value.
                                 </li>
                                 <li>
                                 3.4. Calculate the survival rate.
