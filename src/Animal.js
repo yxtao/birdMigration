@@ -19,8 +19,7 @@ useEffect(() => {
         clearInterval(intervalId);
         props.reportData({...props,winner:true, endX: currentX, endY:currentY})
         return;
-      }
-     
+      } 
       if(currentX > 500 || currentY >780 ){
         clearInterval(intervalId);
         props.reportData({...props, winner:false, endX: currentX, endY:currentY})

@@ -16,8 +16,8 @@ function Board() {
   const [targetSurvialRate, setTargetSurvialRate] = useState(1);
   const [targetCrossRateValue, setTargetCrossRateValue] = useState(60)
   const [targetCrossRate, setTargetCrossRate] = useState(60);
-  const [targetMutationRateValue, setTargetMutationRateValue] = useState(0)
-  const [targetMutationRate, setTargetMutationRate] = useState(0);
+  const [targetMutationRateValue, setTargetMutationRateValue] = useState(1)
+  const [targetMutationRate, setTargetMutationRate] = useState(1);
   const [nextGen, setNextGen] = useState(false)
   const [parents, setParents] = useState([]);
   const [generationCounts, setGenerationCounts] = useState(0);
@@ -111,8 +111,9 @@ function Board() {
   }, [direction, survivals])
 
   useEffect(()=>{
-    if(backAnimals.length === survivals.length && direction === -1 && survivalRate<targetSurvialRate   ){
+    if(backAnimals.length === survivals.length && direction === -1 && survivalRate<targetSurvialRate  && generationCounts< MAXGEN ){
       setNextGen(true);
+      setGenerationCounts(pre=>pre+1)
       let temp = [];
       backAnimals.forEach((obj)=>{
         temp.push(obj);
@@ -120,7 +121,7 @@ function Board() {
       setParents(temp);
       setDirection(1);
      }
- },[backAnimals, animals, direction, survivals.length, survivalRate, targetSurvialRate])
+ },[backAnimals, animals, direction, survivals.length, survivalRate, targetSurvialRate, generationCounts])
 
   useEffect(()=>{  
     if(nextGen === true && direction === 1 ){
@@ -189,7 +190,6 @@ function Board() {
       cloneNums--;
     }
 
-    setGenerationCounts(pre=>pre+1)
     setTimeout(()=>{
       setAnimals(temp); 
       setWinners([]);
@@ -237,7 +237,7 @@ function Board() {
           survival rate 
           <input 
             type="range"
-            min="50"
+            min="60"
             max="95"
             value={targetSurvialRateValue}
             onChange={(e)=>handleTargetSurvialRateValueChange(e)} /> {targetSurvialRateValue}%  
@@ -255,7 +255,7 @@ function Board() {
           mutation rate
           <input 
             type="range"
-            min="0"
+            min="1"
             max="5"
             value={targetMutationRateValue}
             onChange={(e)=>handleTargetMutationRateValueChange(e)} /> {targetMutationRateValue}%  
