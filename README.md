@@ -1,5 +1,6 @@
-# Bird Migration Visualization 
-A web project to demonstrate the Evolutionary Algorithm in birds’ adaptation to migration  
+# Bird Migration Visualization-Evolutionary Algorithms
+A web project to demonstrate the Evolutionary Algorithm in birds’ adaptation to migration 
+ ![Bird Migration Visualization ](https://github.com/yxtao/birdMigration/blob/master/ezgif.com-gif-maker.gif)
 ## Introduction
 Bird Migration Visualization applies Evolutionary Algorithms to populate generations of birds and simulates the survival rate of each generation. It follows these steps: 
  ### Step 1. Initialize a random bird population. Due to the limited time, each bird is defined simply by three variables: starting position, flying direction and speed. 
@@ -9,5 +10,5 @@ Bird Migration Visualization applies Evolutionary Algorithms to populate generat
 #### Step 3.2. Perform the crossover to produce offsprings, which means try different combinations of the variables’ values.This may be set to a certain crossover ratio by the player.
 #### Step 3.3. Perform mutation to increase the variety of the population, which means change certain values in the offspring. This may be set to a certain mutation ratio by the player.
 #### Step 3.4. Calculate the survival rate.
-## Link to deployed game 
+## Link to the deployed game 
 https://bird-migration-natasha.netlify.app/
