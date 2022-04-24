@@ -52,6 +52,8 @@ function Board() {
    setResults([]);
    setWinners([]);
    setAnimals([]);
+   setDirection(1);
+   setNextGen(false);
  }
 
   const initializePopulation = () => { 
@@ -236,7 +238,7 @@ function Board() {
   return (
     <div style={{display : "flex" , border: "1px solid white", margin: "50px", height:"900px"}}>
       <div style={{height:"700px", width:"800px", marginLeft:"30px", marginTop:"30px",background:"white"}}>
-        <div style={{height:"270px", width:"110px", marginLeft:"320px", marginTop:"370px",background:"#DCF9AD" }}>
+        <div style={{height:"270px", width:"110px", marginLeft:"320px", marginTop:"390px",background:"#DCF9AD" }}>
           <div className="text-danger p-3"> Destination Island </div>
         </div>
         { animals.length>0 && animals.map((animal, index)=> <Animal key ={index}

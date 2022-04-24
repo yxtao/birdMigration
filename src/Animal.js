@@ -6,22 +6,25 @@ const [x,setX] = useState(props.direction === 1 ? props.x: props.endX);
 const [y, setY] = useState(props.direction === 1? props.waveY: props.endY);
 const [hidden,setHidden] = useState(false);
 const direction = props.direction;
+const MAX_TIMER = 30;
 
 useEffect(() => {
   setHidden(false);
   if(direction === 1){
+    let timer = 0;
     let currentX = props.x;
     let currentY = props.waveY;
     const intervalId = setInterval(() => {
+     timer++;
      currentX += props.speedX;
-     currentY += props.waveY 
+     currentY += props.waveY ;
      setX(currentX);
      setY(currentY);
       if((currentX + props.speedX >= 460 && currentX <= 500 && currentY> 540 && currentY <= 780) ){
         clearInterval(intervalId);
         props.reportData({...props,winner:true, endX: currentX, endY:currentY})
         return;
-      } else if(currentX > 500 || currentY > 700 ){
+      } else if(currentX > 500 || currentY > 780 || timer > MAX_TIMER){
         clearInterval(intervalId);
         props.reportData({...props, winner:false, endX: currentX, endY:currentY})
         setHidden(true);
