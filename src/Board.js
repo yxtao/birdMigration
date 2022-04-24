@@ -7,7 +7,6 @@ function Board() {
   const MAXGEN = 50;
   const [results, setResults] = useState([]);
   const [winners, setWinners] = useState([]);
-  const [failers, setFailers] = useState([]);
   const [animals, setAnimals] = useState([]);
   const [populationNumValue, setPopulationNumValue] = useState(MIN_POPULATION);
   const [populationNum, setPopulationNum] = useState(0)
@@ -61,7 +60,6 @@ function Board() {
     setGenerationCounts(1)
     setResults([]);
     setWinners([]);
-    setFailers([]);
     setAnimals([]);
     setParents([]);
     let temp = [];
@@ -81,8 +79,6 @@ function Board() {
     if(e.winner === true){
       setWinners((pre) => [...pre, e]);
       setParents((pre) => [...pre, e]);
-    }else{
-      setFailers((pre) => [...pre,e])
     }
  }
   
@@ -152,25 +148,14 @@ function Board() {
   useEffect(()=>{  
     if(nextGen === true && direction === 1 ){
     let parentsCopy = [...parents];
-    let failersCopy = [...failers];
-    let startXsFail = [];
-    let speedXsFail = [];
-    let waveYsFail = [];
-    if(failersCopy.length > 0){
-      failersCopy.forEach((e) => {
-        startXsFail.push(e.x);
-        speedXsFail.push(e.speedX);
-        waveYsFail.push(e.waveY)
-    })
-  }
     let startXs = [];
     let speedXs =[];
     let waveYs = []; 
     if(parentsCopy.length > 0){
         parentsCopy.forEach((e) => {
-          !startXsFail.includes(e.x) && startXs.push(e.x);
-          !speedXsFail.includes(e.speedX) && speedXs.push(e.speedX);
-          !waveYsFail.includes(e.waveY) && waveYs.push(e.waveY)
+          startXs.push(e.x);
+          speedXs.push(e.speedX);
+          waveYs.push(e.waveY)
       })
     }
 
@@ -178,11 +163,11 @@ function Board() {
     let crossCount = Math.floor(populationNum*crossRate);
     let temp = [];
     for (let i = 0; i<crossCount; i++){
-      let startXindex =  getRandomArbitrary(0, startXs.length);
+      let startXIndex =  getRandomArbitrary(0, startXs.length);
       let speedXIndex = getRandomArbitrary(0, speedXs.length);
       let waveYIndex = getRandomArbitrary(0, waveYs.length);
       let obj = {};
-      obj.x = startXs[startXindex];
+      obj.x = startXs[startXIndex];
       obj.speedX = speedXs[speedXIndex];
       obj.waveY = waveYs[waveYIndex]; 
       temp.push(obj);
@@ -190,11 +175,11 @@ function Board() {
 
     let mutationNum = Math.floor(targetMutationRate * populationNum)
     for (let i = 0; i < mutationNum; i++){
-      let startXindex =  getRandomArbitrary(0, startXs.length);
+      let startXIndex =  getRandomArbitrary(0, startXs.length);
       let speedXIndex = getRandomArbitrary(0, speedXs.length);
       let waveYIndex = getRandomArbitrary(0, waveYs.length);
       let obj = {};
-      obj.x = startXs[startXindex];
+      obj.x = startXs[startXIndex];
       obj.speedX = speedXs[speedXIndex];
       obj.waveY = waveYs[waveYIndex]; 
       let mutationIndex = getRandomArbitrary(0,3);
@@ -219,7 +204,6 @@ function Board() {
     setTimeout(() => {
       setAnimals(temp); 
       setWinners([]);
-      setFailers([]);
       setResults([]);
       setSurvivals([]);
       setBackAnimals([]);
@@ -230,7 +214,6 @@ function Board() {
     populationNum, 
     animals, 
     parents, 
-    failers, 
     targetCrossRate, 
     targetMutationRate, 
     direction])
@@ -275,7 +258,7 @@ function Board() {
           cross rate
           <input 
             type="range"
-            min="50"
+            min="30"
             max="80"
             value={targetCrossRateValue}
             onChange={(e)=>handleTargetCrossRateValueChange(e)} /> {targetCrossRateValue}%  

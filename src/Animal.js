@@ -58,7 +58,7 @@ useEffect(() => {
   return (
     <div>
       <div style={{position: 'absolute', left:`${x}px`,top:`${y}px`}}>
-       <img style={{height:"15px", width:"15px", opacity:hidden?"0":"1"}} src={birdImage} alt="bird"/> 
+       <img style={{height:"15px", width:"15px", opacity:hidden?"0":"1"}} src={birdImage} alt="bird"/>
     </div>
     </div>
   );
