@@ -60,7 +60,6 @@ function Board() {
 
   const initializePopulation = () => { 
     setIsStartDisabled(true)
-  
     let temp = [];
     for(let i = 0; i < populationNum;i++){
         let creature = {};
