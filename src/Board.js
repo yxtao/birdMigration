@@ -51,17 +51,16 @@ function Board() {
    setResults([]);
    setWinners([]);
    setAnimals([]);
+   setParents([]);
+   setBackAnimals([]);
    setDirection(1);
+   setGenerationCounts(1)
    setNextGen(false);
  }
 
   const initializePopulation = () => { 
     setIsStartDisabled(true)
-    setGenerationCounts(1)
-    setResults([]);
-    setWinners([]);
-    setAnimals([]);
-    setParents([]);
+  
     let temp = [];
     for(let i = 0; i < populationNum;i++){
         let creature = {};
