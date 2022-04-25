@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import birdImage from "./bird.png"
+import birdImage from "./bird.png";
+import birdBackImage from './birdBack.png';
 
 function Animal(props) {
 const [x,setX] = useState(props.direction === 1 ? props.x: props.endX);
@@ -41,24 +42,23 @@ useEffect(() => {
      currentX -= props.speedX;
      currentY -= props.waveY; 
       if((currentX < 5  || currentY < 5) ){
-        clearInterval(intervalId);
-        props.reportNextGen(props);
-        setHidden(true);
-        return;
-      }
-      setX(currentX);
-      setY(currentY);
-    }, 100);
+          clearInterval(intervalId);
+          props.reportNextGen(props);
+          setHidden(true);
+          return;
+        }
+        setX(currentX);
+        setY(currentY);
+      }, 100);
     
     return () => clearInterval(intervalId);
-  }
-  
+   }
   }, [direction]);
 
   return (
     <div>
       <div style={{position: 'absolute', left:`${x}px`,top:`${y}px`}}>
-       <img style={{height:"15px", width:"15px", opacity:hidden?"0":"1"}} src={birdImage} alt="bird"/>
+       <img style={{height:"15px", width:"15px", opacity:hidden?"0":"1"}} src={direction===1 ?birdImage: birdBackImage} alt="bird"/>
     </div>
     </div>
   );

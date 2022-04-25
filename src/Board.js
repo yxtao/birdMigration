@@ -220,8 +220,11 @@ function Board() {
 
   return (
     <div style={{display : "flex" , border: "1px solid white", margin: "50px", height:"900px"}}>
-      <div style={{height:"700px", width:"800px", marginLeft:"30px", marginTop:"30px",background:"white"}}>
-        <div style={{height:"270px", width:"110px", marginLeft:"320px", marginTop:"390px",background:"#DCF9AD" }}>
+      <div style={{height:"700px", width:"800px", marginLeft:"30px", marginTop:"30px",background: direction===1? " #FDEBBE ":" #ECF9D0 "}}>
+        <div className="mt-3 d-flex justify-content-center h2"> 
+          <span style={{color: direction === 1? "orange": "blue"}}> {direction === 1 ? "Autumn" : "Spring"} </span> 
+        </div>
+        <div style={{height:"270px", width:"110px", marginLeft:"320px", marginTop:"350px",background:"#C9F79C " }}>
           <div className="text-danger p-3"> Destination Island </div>
         </div>
         { animals.length>0 && animals.map((animal, index)=> <Animal key ={index}
