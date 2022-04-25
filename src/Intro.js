@@ -26,7 +26,7 @@ const Intro = () =>{
                         Evolutionary Algorithms 
                         <ul>
                             <li>
-                            create optimization procedures to solve problems.
+                            create optimization procedures to solve problems
                             </li>
                             <li>
                             require a large amount of trials to gather, select and mutate the produced data to achieve the desired goals
@@ -41,11 +41,11 @@ const Intro = () =>{
                     <ol>
                         <li>
                         <div className="text-success">Initialize a random population</div>
-                        Each bird is defined simply by three variables: starting position, flying direction and speed. 
+                        Each bird is defined simply by three variables: starting position, flying direction and speed
                         </li>
                         <li>
                         <div className="text-success">Calculate the fitness of the population</div>
-                        In the game it is measured by if the birds reach the migration destination,
+                        In the game it is measured by if the birds reach the migration destination
                         </li>
                         <li>
                         <div className="text-success"> Repeat until you reach the goal   </div>
@@ -53,20 +53,22 @@ const Intro = () =>{
                         <p>While stopping criterion is not satisfied, the following steps is processed : </p>
                             <ul>
                                 <li>
-                                <div className="text-primary">3.1. Select parent birds </div>
-                                 Select the  data from the birds have high fitness score
+                                <div className="text-primary">3.1. Select parents </div>
+                                 Select the data from the birds have high fitness score
                                 </li>
                                 <li>
                                 <div className="text-primary"> 3.2. Perform the crossover to produce offsprings </div>
-                                Perform different combinations of the variables’ values.
+                                Try different combinations of the variables’ values from the selected data
                                 </li>
                                 <li>
                                 <div className="text-primary">  3.3. Perform mutation to increase the variety of the population </div>
                                 Change certain values in the offspring. Each offspring inherits traits from the parents,
                                 which are starting position, flying direction and speed. Randomly pick one of the traits and replace it with an arbitrary value.
                                 </li>
-                                <li>
-                                3.4. Calculate the survival rate.
+                                <li>            
+                                <div className="text-primary">  3.4. Calculate the survival rate</div>
+                                Set the next input to be : crossover number counts + mutation number counts + clone counts
+                                 (Evolutionary Algorithms allow some children to be exact copy of parents)
                                 </li>
                             </ul>
                         </li>
