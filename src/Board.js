@@ -69,8 +69,8 @@ function Board() {
         let creature = {};
         creature.direction = 1;
         creature.x = getRandomArbitrary(1,60);
-        creature.speedX = getRandomArbitrary(1,60);
-        creature.waveY = getRandomArbitrary(1,60);
+        creature.speedX = getRandomArbitrary(10,60);
+        creature.waveY = getRandomArbitrary(10,60);
         temp.push(creature)
     }
     setAnimals(temp);
@@ -226,9 +226,9 @@ function Board() {
       if(mutationIndex === 0){
         obj.x = getRandomArbitrary(1,60);
       }else if(mutationIndex === 1){
-        obj.speedX = getRandomArbitrary(1,60);
+        obj.speedX = getRandomArbitrary(10,60);
       }else{
-        obj.waveY = getRandomArbitrary(1,60);
+        obj.waveY = getRandomArbitrary(10,60);
       }
       temp.push(obj);
     }
