@@ -7,7 +7,7 @@ const [x,setX] = useState(props.direction === 1 ? props.x: props.endX);
 const [y, setY] = useState(props.direction === 1? props.waveY: props.endY);
 const [hidden,setHidden] = useState(false);
 const direction = props.direction;
-const MAX_TIMER = 30;
+const MAX_TIMER = 40;
 
 useEffect(() => {
   setHidden(false);
@@ -21,11 +21,11 @@ useEffect(() => {
      currentY += props.waveY ;
      setX(currentX);
      setY(currentY);
-      if((currentX + props.speedX >= 460 && currentX <= 500 && currentY> 540 && currentY <= 780) ){
+      if((currentX + props.speedX >= 460 && currentX <= 520 && currentY> 540 && currentY <= 750) ){
         clearInterval(intervalId);
         props.reportData({...props,winner:true, endX: currentX, endY:currentY})
         return;
-      } else if(currentX > 500 || currentY > 780 || timer > MAX_TIMER){
+      } else if(currentX > 520 || currentY > 750 || timer > MAX_TIMER){
         clearInterval(intervalId);
         props.reportData({...props, winner:false, endX: currentX, endY:currentY})
         setHidden(true);
@@ -38,10 +38,12 @@ useEffect(() => {
   }else{
     let currentX = props.endX;
     let currentY = props.endY;
+    let timer = 0;
     const intervalId = setInterval(() => {
      currentX -= props.speedX;
      currentY -= props.waveY; 
-      if((currentX < 5  || currentY < 5) ){
+     timer++;
+      if((currentX < 200  || currentY < 200 || timer > MAX_TIMER + 10  ) ){
           clearInterval(intervalId);
           props.reportNextGen(props);
           setHidden(true);
@@ -58,7 +60,7 @@ useEffect(() => {
   return (
     <div>
       <div style={{position: 'absolute', left:`${x}px`,top:`${y}px`}}>
-       <img style={{height:"15px", width:"15px", opacity:hidden?"0":"1"}} src={direction===1 ?birdImage: birdBackImage} alt="bird"/>
+       <img style={{height:"8px", width:"8px", opacity:hidden?"0":"1"}} src={direction===1 ?birdImage: birdBackImage} alt="bird"/>
     </div>
     </div>
   );
