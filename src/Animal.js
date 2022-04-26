@@ -43,7 +43,7 @@ useEffect(() => {
      currentX -= props.speedX;
      currentY -= props.waveY; 
      timer++;
-      if((currentX < 200  || currentY < 200 || timer > MAX_TIMER + 10  ) ){
+      if((timer > MAX_TIMER + 10  ) ){
           clearInterval(intervalId);
           props.reportNextGen(props);
           setHidden(true);
