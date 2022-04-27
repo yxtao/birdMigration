@@ -224,11 +224,11 @@ function Board() {
       obj.waveY = waveYs[waveYIndex]; 
       let mutationIndex = getRandomArbitrary(0,3);
       if(mutationIndex === 0){
-        obj.x = getRandomArbitrary(1,60);
+        obj.x = getRandomArbitrary(61,100);
       }else if(mutationIndex === 1){
-        obj.speedX = getRandomArbitrary(10,60);
+        obj.speedX = getRandomArbitrary(61,100);
       }else{
-        obj.waveY = getRandomArbitrary(10,60);
+        obj.waveY = getRandomArbitrary(61,100);
       }
       temp.push(obj);
     }
