@@ -34,10 +34,14 @@ const Intro = () =>{
                             <li>
                             have four elements: <span className="text-danger">Population, source of variation, reproductive fitness, selection </span> 
                             </li>
+                            <li>  Components : <br/>
+                                 Genetic Algorithms– invented by John Holland in the 1960’s <br/>
+                                 Evolution Strategies– invented by Ingo Rechenberg in the 1960's         
+                            </li>
                         </ul>
                     </li>
                     <li>
-                    Evolutionary Algorithms steps
+                    Steps :
                     <ol>
                         <li>
                         <div className="text-success">Initialize a random population</div>
